@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      <div>
+        <input type="text" id="new-todo-input" placeholder="Enter a new TODO" />
+        <button onclick="addNewTodo()">Add Todo</button>
+      </div>
+
+      <div id="todo-list-container"></div>
+    </div>
+  </body>
+</html>
+<script type="module">
+  import {loadTodos, addTodo} from './build/src/ts-version/index.js';
+
+  const listContainer = document.getElementById('todo-list-container');
+  const newTodoInput = document.getElementById('new-todo-input');
+
+  const loadTodosToUI = () => {
+    const todos = loadTodos();
+    const todosFragment = document.createDocumentFragment();
+
+    for (let i = 0; i < todos.length; i++) {
+      const cardElem = document.createElement('div');
+      cardElem.className = 'card';
+
+      const todoTitleElem = document.createElement('p');
+      todoTitleElem.textContent = todos[i].title;
+
+      cardElem.appendChild(todoTitleElem);
+      todosFragment.appendChild(cardElem);
+    }
+
+    listContainer.appendChild(todosFragment);
+  };
+
+  const addTodoToView = title => {
+    const cardElem = document.createElement('div');
+    cardElem.className = 'card';
+
+    const todoTitleElem = document.createElement('p');
+    todoTitleElem.textContent = title;
+
+    cardElem.appendChild(todoTitleElem);
+    listContainer.appendChild(cardElem);
+  };
+
+  loadTodosToUI();
+
+  window.addNewTodo = () => {
+    const todoTitle = newTodoInput.value;
+    if (!todoTitle) {
+      return alert('Please enter a title');
+    }
+
+    addTodo(todoTitle);
+    addTodoToView(todoTitle);
+    newTodoInput.value = '';
+    return;
+  };
+</script>
